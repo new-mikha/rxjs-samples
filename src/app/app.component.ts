@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubjectSamples} from "./samples/behav-subject-as-is";
+import {BehaviorSubjectSamples} from "./samples/behavior-subject-samples";
 
 @Component({
   selector: 'app-root',

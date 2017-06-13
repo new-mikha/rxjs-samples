@@ -40,7 +40,6 @@ export class BehaviorSubjectSamples {
 
   public static switchMapOnBehaviorSubject() {
     let subj1 = new BehaviorSubject<number>(null);
-    let source = subj1;
 
     let subj2_a = new Observable(
       subscriber => {
@@ -83,33 +82,40 @@ export class BehaviorSubjectSamples {
 
     let resultObs: Observable<string>;
 
-    let count = 0;
-    let result = source.switchMap(
-      num => {
-        count++;
-        console.log('-----------------switch map', count, num);
 
-        if (num == null)
-          return Observable.empty();
-
-
-        if (num == 101) {
-          resultObs = subj2_a.map(str => str + '_' + num);
-        } else {
-          resultObs = subj2_b.map(str => str + '_' + num);
-        }
-
-        return resultObs;
-      });
-
-    result.subscribe(str => console.log('result:', str));
-    result.subscribe(str => console.log('\tresult3:', str));
-
+    console.log('before any subscription');
+    BehaviorSubjectSamples.getSwitchMap(subj1, subj2_a, subj2_b).subscribe(str => console.log('result:', str));
+    console.log('subscribed first time');
     subj1.next(101);
+    console.log('top next fired');
+
+    BehaviorSubjectSamples.getSwitchMap(subj1, subj2_a, subj2_b).subscribe(str => console.log('\tresultX:', str));
+    console.log('subscribed second time');
 
     setTimeout(() => subj1.next(102), 500);
 
     // setTimeout(() => result.subscribe(str => console.log('\tresult2:', str))
     //   , 3000);
+  }
+
+  private static smCount = 0;
+
+  private static getSwitchMap(out: Observable<number>, in1: Observable<string>, in2: Observable<string>,) {
+    return out.switchMap(
+      num => {
+        BehaviorSubjectSamples.smCount++;
+        console.log('-----------------switch map', BehaviorSubjectSamples.smCount, num);
+
+        if (num == null)
+          return Observable.empty();
+
+        let result: Observable<string>;
+        if (num == 101) {
+          result = in1.map(str => str + '_' + num);
+        } else {
+          result = in2.map(str => str + '_' + num);
+        }
+        return result;
+      });
   }
 }
