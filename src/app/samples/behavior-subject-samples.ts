@@ -161,19 +161,28 @@ export class BehaviorSubjectSamples {
   }
 
 
-  public static   switchMapOnBehaviorSubject() {
+  public static switchMapOnBehaviorSubject() {
     let subj1 = new BehaviorSubject<number>(null);
 
-    let subj2_a = new Observable(
-      subscriber => {
-        console.log('-----subj2_a');
+    let subj2_a = new Observable(subscriber => {
+      console.log('Long operation observable');
+      let timeoutHandle = setTimeout(() => {
+          timeoutHandle = null;
+          console.log('hit');
+          subscriber.next('a1');
+          subscriber.complete();
+        },
+        2000);
 
-        setTimeout(() => {
-            subscriber.next('a1');
-            subscriber.complete();
-          },
-          100);
+      subscriber.add(() => {
+        if (timeoutHandle != null) {
+          console.log('cancelling...');
+          clearTimeout(timeoutHandle);
+          timeoutHandle = null;
+        }
       });
+    });
+
     subj2_a = BehaviorSubjectSamples.ensureRunOnce(subj2_a);
 
 
@@ -192,12 +201,12 @@ export class BehaviorSubjectSamples {
     BehaviorSubjectSamples.getSwitchMap(subj1, subj2_a, subj2_b).subscribe(str => console.log('result:', str));
     subj1.next(101);
 
-    setTimeout(() => {
-      BehaviorSubjectSamples.getSwitchMap(subj1, subj2_a, subj2_b).subscribe(str => console.log('\tresultX:', str));
-    }, 2000);
+    // setTimeout(() => {
+    //   BehaviorSubjectSamples.getSwitchMap(subj1, subj2_a, subj2_b).subscribe(str => console.log('\tresultX:', str));
+    // }, 2000);
 
 
-    setTimeout(() => subj1.next(102), 500);
+  //  setTimeout(() => subj1.next(102), 500);
 
     // setTimeout(() => result.subscribe(str => console.log('\tresult2:', str))
     //   , 3000);

@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     try{
-      BehaviorSubjectSamples.testEnsureRunOnce();
+      BehaviorSubjectSamples.switchMapOnBehaviorSubject();
     }catch (e)
     {
       console.error(e);
