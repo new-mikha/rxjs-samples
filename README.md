@@ -1,5 +1,7 @@
 # RxjsSamples
 
+Some small RxJs samples which are helpful to grab some RxJs ideas. See src/app/samples for the actual samples, run the app as any other Angular CLI app to see the output in a browser console.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.3.
 
 ## Development server
