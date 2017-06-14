@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BehaviorSubjectSamples} from "./samples/behavior-subject-samples";
+import {SwitchMapSamples} from "./samples/switch-map-samples";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     try{
-      BehaviorSubjectSamples.switchMapOnBehaviorSubject();
+      SwitchMapSamples.concurrent();
     }catch (e)
     {
       console.error(e);
